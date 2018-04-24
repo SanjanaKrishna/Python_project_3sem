@@ -1,0 +1,170 @@
+1.)GUI code to enter Name, Subject ,Code and Year:
+       Here a window is generated asking Name, Subject, Subject code and Year  where you can enter the values
+
+from tkinter import *
+import tkinter.messagebox as tm
+from tkinter.filedialog import askopenfilename
+class browseFrame(Frame):
+    def __init__(self, master):
+       super().__init__(master)
+        self.label_1 = Label(self, text="Name of Faculty")
+        self.label_2 = Label(self, text="Name of Subject")
+        self.label_3 = Label(self, text="Subject Code")
+        self.label_4 = Label(self, text="Year")
+
+        self.entry_1 = Entry(self)
+        self.entry_2 = Entry(self)
+        self.entry_3= Entry(self)
+      self.entry_4= Entry(self)
+
+        self.label_1.grid(row=0, sticky=E)
+        self.label_2.grid(row=1, sticky=E)
+        self.label_3.grid(row=2, sticky=E)
+        self.label_4.grid(row=3, sticky=E)
+        self.entry_1.grid(row=0, column=1)
+        self.entry_2.grid(row=1, column=1)
+        self.entry_3.grid(row=2, column=1)
+        self.entry_4.grid(row=3, column=1)
+
+2.)Creating buttons
+Here the button is created . When the button is clicked the file is extracted and gets it        into the code. 
+self.brobtn = Button(self, text="Browse", command = self._browse_btn_clickked)
+self.brobtn.grid(columnspan=2)
+
+self.resbtn = Button(self, text="Submit", command = self._submit_btn_clickked)
+self.resbtn.grid(columnspan=2)
+self.pack()
+
+def _browse_btn_clickked(self):
+
+        filename = askopenfilename() # show an "Open" dialog box and return the path to the selected file
+        filename=filename.replace('/', '\\')
+        print(filename)
+
+        if filename != "":
+tm.showinfo("browse info", "Successfully Uploaded")
+        else:
+tm.showerror("browse error", "Not Successful")
+
+  def _submit_btn_clickked(self):
+name_of_faculty = self.entry_1.get()
+name_of_subject= self.entry_2.get()
+subject_code= self.entry_3.get()
+        year=self.entry_4.get()
+        f = open('myfile.txt','w')
+
+
+
+3.)Import csv file to read marks
+Here first we import the csv file for reading the file and later we assign that csv file to                           the dataframe for accessing that file. 
+
+        import pandas as pd
+        import csv
+exampleFile=open('C:\\Users\Preeti\Desktop\CO1.csv')
+exampleReader=csv.reader(exampleFile)
+exampleData=list(exampleFile)
+df=pd.read_csv('C:\\Users\Preeti\Desktop\CO1.csv')
+
+ 4.)Attainment of COs’
+Here we will first calculate the total number of students and then we calculate the number of students who have not taken up the  particular question and later by using this  we will calculate the number of students who have attended that particular question.
+        x=len(df.index)
+        y=df.isnull().sum()
+        z=x-y
+        s=df.sum()
+exampleFile = open('C:\\Users\Preeti\Desktop\MARK.csv')
+exampleReader = csv.reader(exampleFile)
+exampleData=list(exampleFile)
+        df1=pd.read_csv('C:\\Users\Preeti\Desktop\MARK.csv')
+        n=df1.sum()
+    p=(s*n)/z;
+        print("The attainment is:")
+        print(p)
+
+
+
+
+5.)To obtain the average attainment of  COs’
+Here the final attainment is calculated by adding up the values of corresponding COs’
+      and  dividing it by the total number of COs’.
+
+list(df1.columns.values)
+coslist = []
+        for x in list(df1.columns.values):
+coslist.append(x[3:])
+att =[]
+for i in range(len(p)-2):
+att.append(p[i]) 
+        print ("This is attainments:")
+        keys = coslist
+        values = att
+cocounts = []
+sortedlist =sorted(set(keys))
+cosum =[0,0,0,0]
+finalatt=[]
+i=0
+     j=0
+        print(sorted(set(keys)))
+        print(keys)
+        dictionary = dict(zip(sortedlist,values))
+        print(sorted(dictionary))
+     for (x,y) in zip(keys,values):
+            for z in sorted(set(keys)):
+                if x == z:
+cosum[sortedlist.index(x)]=cosum[sortedlist.index(x)]+y     
+        print(cosum)
+
+        for x in sorted(set(keys)):
+cocounts.append(keys.count(x))
+        print(cocounts)
+
+        for (x,y) in zip(cosum,cocounts):
+finalatt.append(x/y)
+        print(finalatt)
+        print(att)
+coslist
+sumdict=dict(zip(coslist,att))
+5.)Plotting a bar graph
+The graph is plotted taking the average attainment of each CO and the CO number .       Numpy is usd here in order to do so.
+        import matplotlib.pyplot as plt
+plt.rcdefaults()
+        import numpy as np
+        import matplotlib.pyplot as plt
+people = sorted(set(keys))
+y_pos = np.arange(len(people))
+        performance = finalatt
+        error = np.random.rand(len(people))
+
+plt.barh(y_pos, performance, xerr=error, align='center', alpha=0.4)
+plt.yticks(y_pos, people)
+plt.xlabel('Attainment')
+plt.title('Graph for final CO attainment')
+plt.show()
+
+
+
+
+6.)Displaying the output
+Here the output is calculated and is display when all the details of the facuty is filled and  an output both in graphical as well as in numerical form is displayed.
+f.write(name_of_faculty)
+f.write('\n')
+f.write(name_of_subject)
+f.write('\n')
+f.write(subject_code)
+f.write('\n')
+f.write(year)
+f.write('\n')
+f.close()
+
+        if name_of_faculty == "sanket" and name_of_subject == "dms":
+tm.showinfo("browse info", "Generating Results")
+        else:
+tm.showerror("browse error", "not successful")
+
+self = Tk()
+self.title("POs COs POS")
+self.geometry("200x400")
+lf = browseFrame(self)
+self.mainloop()
+
+
+
